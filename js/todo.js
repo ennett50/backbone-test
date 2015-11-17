@@ -10,7 +10,13 @@ $(function () {
     };
 
 
-    App.Models.Task = Backbone.Model.extend({});
+    App.Models.Task = Backbone.Model.extend({
+        validate: function(attrs){
+            if (!$.trim(attrs.title)) {
+                return 'Name is empty'
+            }
+        }
+    });
 
     App.Views.Task = Backbone.View.extend({
         tagName: 'li',
@@ -19,6 +25,7 @@ $(function () {
         initialize : function(){
            // _.bindAll(this, 'editTask', 'render');
             this.model.on('change', this.render, this);
+            this.model.on('destroy', this.remove, this);
         },
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));
@@ -26,16 +33,27 @@ $(function () {
             return this;
         },
         events: {
-            'click .edit' : 'editTask'
+            'click .edit' : 'editTask',
+            'click .delete' : 'destroyTask'
         },
         editTask : function(){
             var newTaskTitle = prompt('How to rename this task?', this.model.get('title'));
-            this.model.set('title', newTaskTitle);
+            //if (!newTaskTitle) return;
+            this.model.set('title', newTaskTitle, {validate: true});
+        },
+        destroyTask : function(){
+            this.model.destroy();
+            //console.log(tasksCollection);
+        },
+        remove : function(){
+            this.$el.remove();
         }
-
     });
     App.Views.Tasks = Backbone.View.extend({
         tagName: 'ol',
+        initialize : function(){
+            this.collection.on('add', this.addOne, this);
+        },
         render: function () {
             this.collection.each(this.addOne, this);
             return this
@@ -45,6 +63,24 @@ $(function () {
                 model: task
             });
             this.$el.append(taskView.render().el)
+        }
+    });
+
+
+    App.Views.AddTask = Backbone.View.extend({
+
+        el : '#addTask',
+        events: {
+          'submit' : 'submit'
+        },
+        initialize: function(){
+           //console.log(this.el.innerHTML)
+        },
+        submit: function(e){
+            e.preventDefault();
+            var newTitle = this.$el.find('input[type="text"]').val();
+            var newTask = new App.Models.Task({ title:  newTitle});
+            this.collection.add(newTask);
         }
     });
 
@@ -73,6 +109,8 @@ $(function () {
 
     $('.tasks').append(tasksView.render().el);
 
-    //console.log(App.Views.Tasks.render().el)
+    var addTaskView = new App.Views.AddTask({
+        collection:  tasksCollection
+    })
 
 });

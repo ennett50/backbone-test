@@ -9,12 +9,17 @@
 <body>
 
 <h1>Todo list for example</h1>
+
+<form id="addTask">
+    <input type="text" placeholder="Title task"/>
+    <input type="submit" value="add"/>
+</form>
 <div class="tasks">
 
 </div>
 
 <script type="text/template" id="taskTemplate">
-    <span><%= title  %> - <%= priority  %></span>
+    <span><%= title  %> </span>
     <button class="edit">Edit</button>
     <button class="delete">Delete</button>
 
