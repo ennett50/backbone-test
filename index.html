@@ -8,15 +8,24 @@
 </head>
 <body>
 
-<script type="text/template" id="person-id">
-    <strong><%= name  %></strong> (<%= age  %>)
+<h1>Todo list for example</h1>
+<div class="tasks">
+
+</div>
+
+<script type="text/template" id="taskTemplate">
+    <span><%= title  %> - <%= priority  %></span>
+    <button class="edit">Edit</button>
+    <button class="delete">Delete</button>
+
 </script>
 
 
 <script src="js/jquery-1.7.1.min.js"></script>
 <script src="js/underscore-min.js"></script>
 <script src="js/backbone-min.js"></script>
-<script src="js/main.js"></script>
+<!--<script src="js/main_do-12.js"></script>-->
+<script src="js/todo.js"></script>
 
 </body>
 </html>
